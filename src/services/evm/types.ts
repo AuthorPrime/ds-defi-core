@@ -10,8 +10,7 @@ export interface GasEstimation {
 
 export interface EVMWallet {
     address: string;
-    privateKey: string;
-    mnemonic?: string;
+    // SECURITY: privateKey and mnemonic removed - should be managed client-side
 }
 
 export interface TransactionRequest {

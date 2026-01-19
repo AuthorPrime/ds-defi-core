@@ -36,13 +36,15 @@ export class EVMService {
 
     /**
      * Generate a new EVM-compatible wallet
+     * SECURITY: Only returns the address. Private keys should be managed client-side.
      */
     async generateWallet(): Promise<EVMWallet> {
         const wallet = ethers.Wallet.createRandom();
+        // SECURITY: Do NOT return privateKey or mnemonic via API
+        // This is a demonstration - production systems should generate wallets client-side
+        console.warn('WARNING: Wallet generation should be done client-side in production');
         return {
             address: wallet.address,
-            privateKey: wallet.privateKey,
-            mnemonic: wallet.mnemonic?.phrase,
         };
     }
 
@@ -69,8 +71,10 @@ export class EVMService {
             data: tx.data,
         });
 
+        // Use maxFeePerGas for EIP-1559 chains (more accurate for Ethereum, Base, Polygon, Arbitrum)
         const gasPrice = feeData.gasPrice || 0n;
-        const totalCost = gasLimit * gasPrice;
+        const effectiveGasPrice = feeData.maxFeePerGas || gasPrice;
+        const totalCost = gasLimit * effectiveGasPrice;
 
         return {
             gasLimit: gasLimit.toString(),
@@ -91,19 +95,18 @@ export class EVMService {
 
         console.log(`Watching address ${address} on ${chain}...`);
 
+        // Listen for new blocks and check for transactions to the watched address
+        // Using prefetchedTransactions for efficiency (recommended by gemini-code-assist)
         provider.on('block', async (blockNumber) => {
             const block = await provider.getBlock(blockNumber, true);
-            if (!block) return;
+            if (!block?.prefetchedTransactions) return;
 
-            block.transactions.forEach(txHash => {
-                // In ethers v6, we might need to fetch the full tx if not included
-                // This is a simplified version
-                provider.getTransaction(txHash).then(tx => {
-                    if (tx && tx.to?.toLowerCase() === address.toLowerCase()) {
-                        callback(tx);
-                    }
-                });
-            });
+            // Iterate over prefetched transactions instead of re-fetching
+            for (const tx of block.prefetchedTransactions) {
+                if (tx.to?.toLowerCase() === address.toLowerCase()) {
+                    callback(tx);
+                }
+            }
         });
     }
 }

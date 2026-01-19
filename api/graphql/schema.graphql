@@ -310,8 +310,8 @@ type Mutation {
 
 type EVMWallet {
   address: String!
-  privateKey: String!
-  mnemonic: String
+  # SECURITY: privateKey and mnemonic must NEVER be exposed via API
+  # Wallets should be generated client-side in production
 }
 
 type GasEstimation {
