@@ -187,6 +187,23 @@ export function createResolvers(db: DB) {
           .offset(offset)
           .orderBy(desc(transactions.createdAt));
       },
+
+      // EVM Operations (Issue #9)
+      getEVMBalance: async (
+        _: unknown,
+        { address, chain }: { address: string; chain: any }
+      ) => {
+        const { evmService } = await import('../services/evm/evm.service.js');
+        return evmService.getBalance(address, chain);
+      },
+
+      estimateEVMGas: async (
+        _: unknown,
+        { tx, chain }: { tx: any; chain: any }
+      ) => {
+        const { evmService } = await import('../services/evm/evm.service.js');
+        return evmService.estimateGas(tx, chain);
+      },
     },
 
     // =========================================================================
@@ -618,6 +635,12 @@ export function createResolvers(db: DB) {
         }
 
         return count;
+      },
+
+      // EVM Operations (Issue #9)
+      generateEVMWallet: async () => {
+        const { evmService } = await import('../services/evm/evm.service.js');
+        return evmService.generateWallet();
       },
     },
 

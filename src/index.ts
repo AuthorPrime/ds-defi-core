@@ -50,7 +50,7 @@ async function main() {
     url: '/graphql',
     method: ['GET', 'POST', 'OPTIONS'],
     handler: fastifyApolloHandler(apollo, {
-      context: createContext,
+      context: async (request, reply) => await createContext({ request, reply: reply as any }),
     }),
   });
 
