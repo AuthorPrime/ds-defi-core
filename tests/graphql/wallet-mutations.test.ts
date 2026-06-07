@@ -39,7 +39,7 @@ describe('wallet mutation resolvers', () => {
       isPrimary: false,
     };
     const mock = createInsertMock([wallet]);
-    const resolvers = createResolvers(mock.db as never);
+    const resolvers = createResolvers(mock.db as any);
 
     await expect(
       resolvers.Mutation.addWallet(
@@ -50,7 +50,7 @@ describe('wallet mutation resolvers', () => {
             address: 'lnbc1...',
           },
         },
-        { agentId: 'agent-1' } as never
+        { agentId: 'agent-1' } as any
       )
     ).resolves.toBe(wallet);
 
@@ -65,7 +65,7 @@ describe('wallet mutation resolvers', () => {
 
   it('rejects addWallet when no agent is authenticated', async () => {
     const mock = createInsertMock([]);
-    const resolvers = createResolvers(mock.db as never);
+    const resolvers = createResolvers(mock.db as any);
 
     await expect(
       resolvers.Mutation.addWallet(
@@ -76,7 +76,7 @@ describe('wallet mutation resolvers', () => {
             address: '0xabc',
           },
         },
-        {} as never
+        {} as any
       )
     ).rejects.toThrow('Unauthorized');
 
@@ -92,7 +92,7 @@ describe('wallet mutation resolvers', () => {
       lastSyncedAt: new Date('2026-06-07T12:00:00Z'),
     };
     const mock = createUpdateMock([wallet]);
-    const resolvers = createResolvers(mock.db as never);
+    const resolvers = createResolvers(mock.db as any);
 
     await expect(
       resolvers.Mutation.syncWalletBalance(null, { walletId: 'wallet-2' })

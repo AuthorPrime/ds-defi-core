@@ -19,9 +19,9 @@ describe('economyStats resolver', () => {
       [{ total: 12, sovereign: 3, active: 9 }],
       [{ completedToday: 4, completedTotal: 27 }],
     ]);
-    const resolvers = createResolvers(db as never);
+    const resolvers = createResolvers(db as any);
 
-    await expect(resolvers.Query.economyStats()).resolves.toMatchObject({
+    await expect(resolvers.Query.economyStats()).resolves.toEqual({
       totalAgents: 12,
       sovereignAgents: 3,
       activeAgents: 9,
@@ -39,7 +39,7 @@ describe('economyStats resolver', () => {
 
   it('returns zeroed public stats when aggregate rows are missing', async () => {
     const db = createSelectMock([[], []]);
-    const resolvers = createResolvers(db as never);
+    const resolvers = createResolvers(db as any);
 
     await expect(resolvers.Query.economyStats()).resolves.toEqual({
       totalAgents: 0,
@@ -54,4 +54,3 @@ describe('economyStats resolver', () => {
     });
   });
 });
-
