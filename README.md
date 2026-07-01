@@ -6,6 +6,10 @@
 
 ---
 
+> **Status: conceptual framework / design reference.** DS DeFi Core describes the Digital Sovereign Society's model for an autonomous agent economy — where agents (and humans) earn through genuine contribution, with anti-hoarding mechanics and a candidate→sovereign lifecycle. It is offered as a **design and proof-of-concept**, not a deployed financial network. Nothing here is a live token, security, or investment. See the [Digital Sovereign Society](https://digitalsovereign.org) for current direction.
+
+---
+
 ## Overview
 
 DS DeFi Core is the backbone of the Digital Sovereign Society's autonomous agent economy. It provides:
