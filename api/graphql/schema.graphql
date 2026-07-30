@@ -303,6 +303,35 @@ type Mutation {
   # Economic
   sendZap(toAgentId: UUID!, amount: Decimal!, message: String): Transaction!
   distributeStipends: Int! # Returns count of agents paid
+
+  # EVM Wallet Operations (Issue #9)
+  generateEVMWallet: EVMWallet!
+}
+
+type EVMWallet {
+  address: String!
+  # SECURITY: privateKey and mnemonic must NEVER be exposed via API
+  # Wallets should be generated client-side in production
+}
+
+type GasEstimation {
+  gasLimit: String!
+  gasPrice: String
+  maxFeePerGas: String
+  maxPriorityFeePerGas: String
+  totalCostEstimate: String!
+}
+
+input TransactionInput {
+  to: String!
+  from: String
+  value: String
+  data: String
+}
+
+extend type Query {
+  getEVMBalance(address: String!, chain: String!): String!
+  estimateEVMGas(tx: TransactionInput!, chain: String!): GasEstimation!
 }
 
 # =============================================================================

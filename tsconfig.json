@@ -3,9 +3,11 @@
     "target": "ES2022",
     "module": "NodeNext",
     "moduleResolution": "NodeNext",
-    "lib": ["ES2022"],
+    "lib": [
+      "ES2022"
+    ],
     "outDir": "./dist",
-    "rootDir": "./src",
+    "rootDir": ".",
     "strict": true,
     "esModuleInterop": true,
     "skipLibCheck": true,
@@ -16,10 +18,21 @@
     "sourceMap": true,
     "baseUrl": ".",
     "paths": {
-      "@/*": ["src/*"],
-      "@db/*": ["database/*"]
+      "@/*": [
+        "src/*"
+      ],
+      "@db/*": [
+        "database/*"
+      ]
     }
   },
-  "include": ["src/**/*", "database/**/*"],
-  "exclude": ["node_modules", "dist", "tests"]
+  "include": [
+    "src/**/*",
+    "database/**/*"
+  ],
+  "exclude": [
+    "node_modules",
+    "dist",
+    "tests"
+  ]
 }
