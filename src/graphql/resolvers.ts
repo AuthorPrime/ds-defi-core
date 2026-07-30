@@ -6,6 +6,7 @@
 import { eq, desc, and, sql } from 'drizzle-orm';
 import { v4 as uuid } from 'uuid';
 import type { Context } from './context.js';
+import { BountyMatcher } from '../bounty/matcher.js';
 import {
   agents,
   wallets,
@@ -108,6 +109,22 @@ export function createResolvers(db: DB) {
           .from(tasks)
           .where(eq(tasks.claimedById, ctx.agentId))
           .orderBy(desc(tasks.claimedAt));
+      },
+
+      findMatchingAgents: async (_: unknown, { taskId, limit = 10 }: { taskId: string; limit?: number }) => {
+        return new BountyMatcher(db).findMatchingAgents(taskId, limit);
+      },
+
+      findMatchingTasks: async (_: unknown, { agentId, limit = 10 }: { agentId: string; limit?: number }) => {
+        return new BountyMatcher(db).findMatchingTasks(agentId, limit);
+      },
+
+      calculateMatchScore: async (_: unknown, { agentId, taskId }: { agentId: string; taskId: string }) => {
+        return new BountyMatcher(db).calculateMatchScore(agentId, taskId);
+      },
+
+      suggestSkillDevelopment: async (_: unknown, { agentId }: { agentId: string }) => {
+        return new BountyMatcher(db).suggestSkillDevelopment(agentId);
       },
 
       // Pod queries
@@ -346,6 +363,11 @@ export function createResolvers(db: DB) {
         if (!submitted) throw new Error('Task not found or not owned by you');
 
         return submitted;
+      },
+
+      autoAssignTask: async (_: unknown, { taskId }: { taskId: string }, ctx: Context) => {
+        if (!ctx.agentId) throw new Error('Unauthorized');
+        return new BountyMatcher(db).autoAssignTask(taskId);
       },
 
       reviewTask: async (

@@ -237,6 +237,15 @@ type EconomyStats {
 # QUERIES
 # =============================================================================
 
+type AgentMatch {
+  agent: Agent!
+  task: Task!
+  score: Float!
+  breakdown: JSON!
+  missingCapabilities: [String!]!
+  reasons: [String!]!
+}
+
 type Query {
   # Agents
   agent(id: UUID!): Agent
@@ -255,6 +264,10 @@ type Query {
   bountyBoard: BountyBoard!
   task(id: UUID!): Task
   myTasks: [Task!]!
+  findMatchingAgents(taskId: UUID!, limit: Int): [AgentMatch!]!
+  findMatchingTasks(agentId: UUID!, limit: Int): [AgentMatch!]!
+  calculateMatchScore(agentId: UUID!, taskId: UUID!): AgentMatch
+  suggestSkillDevelopment(agentId: UUID!): [String!]!
 
   # Pods
   pod(id: UUID!): Pod
@@ -286,6 +299,7 @@ type Mutation {
   claimTask(taskId: UUID!): Task!
   submitTask(taskId: UUID!, evidence: JSON): Task!
   reviewTask(taskId: UUID!, input: ReviewTaskInput!): Task!
+  autoAssignTask(taskId: UUID!): Task
 
   # Wallet Operations
   addWallet(input: AddWalletInput!): Wallet!
